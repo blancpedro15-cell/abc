@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>FADU Bienestar</title>
+<meta name="description" content="FADU Bienestar: deportes, rutas, consultoría psicológica y agenda de cursada. Demo en HTML, CSS y JavaScript puros.">
+<meta name="theme-color" content="#232323">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  :root {
+    --ink: #1E1E1E;
+    --dark: #232323;
+    --dark-2: #2A2A2A;
+    --green: #15B86C;
+    --blue: #1E88E5;
+    --bg: #F4F5F7;
+    --line: #E5E7EB;
+    --muted: #6B7280;
+    --white: #FFFFFF;
+  }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; border: 0; background: none; padding: 0; }
+  h1, h2, h3, h4, h5, p { margin: 0; }
+  svg { display: block; }
+  .icon {
+    width: 20px; height: 20px; flex: none;
+    fill: none; stroke: currentColor;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    display: inline-block; vertical-align: middle;
+  }
+  .icon.sm { width: 16px; height: 16px; }
+  .icon.xs { width: 14px; height: 14px; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* ---------- Marco tipo teléfono ---------- */
+  .shell {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .phone {
+    position: relative;
+    width: 430px;
+    height: 860px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 40px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, .25);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---------- Login ---------- */
+  .login-phone { padding: 44px 28px 30px; justify-content: space-between; }
+  .login-head { text-align: center; padding-top: 8px; }
+  .logo { display: flex; align-items: baseline; justify-content: center; letter-spacing: -.045em; }
+  .logo-fadu { font-size: 54px; font-weight: 900; line-height: .9; color: var(--ink); }
+  .logo-bien { font-size: 28px; font-weight: 700; margin-left: 6px; color: var(--ink); }
+  .login-sub { font-size: 13.5px; color: #9CA3AF; font-weight: 500; margin-top: 6px; letter-spacing: -.01em; }
+  .login-card {
+    background: #222;
+    border: 1px solid #3F3F46;
+    border-radius: 28px;
+    padding: 24px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, .2);
+    margin: auto 0;
+  }
+  .field { margin-bottom: 18px; }
+  .field:last-of-type { margin-bottom: 0; }
+  .field > label, .label-row > label {
+    display: block; color: #fff; font-size: 14px; font-weight: 500; margin-bottom: 8px;
+  }
+  .label-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+  .label-row > label { margin: 0; }
+  .link { color: #2575FC; font-size: 13px; font-weight: 500; }
+  .link:hover { color: #60A5FA; }
+  .input-wrap { position: relative; display: flex; align-items: center; }
+  .input-wrap > .icon { position: absolute; left: 15px; color: #9CA3AF; pointer-events: none; }
+  .input-wrap input {
+    width: 100%;
+    background: #fff;
+    color: #111827;
+    border: 0;
+    border-radius: 16px;
+    padding: 14px 16px 14px 48px;
+    font-size: 15px;
+    font-weight: 500;
+    outline: none;
+  }
+  .input-wrap input:focus { box-shadow: 0 0 0 2px var(--blue); }
+  .input-wrap input::placeholder { color: #9CA3AF; }
+  .switch-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    color: #D4D4D8; font-size: 13.5px; cursor: pointer; position: relative;
+  }
+  .login-card .switch-row { margin: 18px 0 22px; }
+  .switch-input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .switch {
+    position: relative; display: inline-block; flex: none;
+    width: 56px; height: 32px; border-radius: 999px;
+    background: #52525B; border: 1px solid #71717A;
+    transition: background .2s ease, border-color .2s ease;
+  }
+  .switch::after {
+    content: ""; position: absolute; top: 3px; left: 3px;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .35);
+    transition: transform .2s ease;
+  }
+  .switch-input:checked + .switch { background: var(--green); border-color: rgba(255, 255, 255, .6); }
+  .switch-input:checked + .switch::after { transform: translateX(24px); }
+  .switch-input:focus-visible + .switch { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .form-error { color: #F87171; font-size: 12px; text-align: center; margin-bottom: 12px; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    border-radius: 16px; font-weight: 700; transition: background .15s ease, transform .1s ease, color .15s ease;
+  }
+  .btn:active { transform: scale(.99); }
+  .btn-white { background: #fff; color: var(--ink); }
+  .btn-white:hover { background: #F4F4F5; }
+  .btn-block { width: 100%; padding: 14px 16px; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .2); }
+  .btn-demo { display: block; width: 100%; margin-top: 10px; padding: 6px 0; font-size: 12px; color: #9CA3AF; text-align: center; }
+  .btn-demo:hover { color: #fff; }
+  .login-foot { text-align: center; }
+  .login-foot p:first-child { color: #D4D4D8; font-weight: 700; font-size: 12.5px; letter-spacing: .02em; }
+  .login-foot p + p { color: #D4D4D8; font-weight: 400; font-size: 11.5px; margin-top: 2px; }
+
+  /* ---------- App: cabecera, contenido y navegación ---------- */
+  .app-header {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+    padding: 26px 24px 12px; background: #fff; z-index: 5;
+  }
+  .logo-sm { justify-content: flex-start; }
+  .logo-sm .logo-fadu { font-size: 28px; }
+  .logo-sm .logo-bien { font-size: 16px; margin-left: 5px; }
+  .app-header h1 { font-size: 24px; font-weight: 800; line-height: 1.15; margin-top: 2px; letter-spacing: -.02em; }
+  .header-actions { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+  .map-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #ECFDF5; color: #047857; font-size: 12px; font-weight: 700;
+    padding: 10px 11px; border-radius: 16px;
+  }
+  .map-pill:hover { background: #D1FAE5; }
+  .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 16px;
+    background: #F4F4F5; color: #52525B;
+  }
+  .icon-btn:hover { background: #E4E4E7; }
+  .icon-btn.ghost { background: #3F3F46; color: #E4E4E7; }
+  .icon-btn.ghost:hover { background: #52525B; color: #fff; }
+
+  .app-main {
+    flex: 1; overflow-y: auto; overflow-x: hidden;
+    padding: 4px 20px 112px;
+    display: flex; flex-direction: column; gap: 16px;
+    scrollbar-width: none;
+  }
+  .app-main::-webkit-scrollbar { display: none; }
+
+  .stack { display: flex; flex-direction: column; gap: 12px; }
+  .stack-lg { display: flex; flex-direction: column; gap: 16px; }
+
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 16px; }
+  .card-dark { background: var(--dark); color: #fff; border: 1px solid #2F2F2F; border-radius: 26px; padding: 20px; }
+  .eyebrow { display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .eyebrow.green { color: var(--green); }
+  .muted { color: var(--muted); }
+
+  /* ---------- Inicio: perfil ---------- */
+  .profile-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+  .profile-id { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  .avatar {
+    position: relative; width: 74px; height: 74px; flex: none;
+    border: 1px solid #A1A1AA; border-radius: 18px; background: #1B1B1B;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+    color: #E53935; font-size: 12px; font-weight: 600; letter-spacing: .1em;
+  }
+  .avatar:hover { border-color: #34D399; }
+  .avatar-initials {
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #2563EB, #10B981);
+    color: #fff; font-size: 22px; font-weight: 900; letter-spacing: -.02em;
+  }
+  .avatar-hover {
+    position: absolute; inset: 0; background: rgba(0, 0, 0, .5);
+    display: flex; align-items: center; justify-content: center; color: #fff;
+    opacity: 0; transition: opacity .15s ease;
+  }
+  .avatar:hover .avatar-hover { opacity: 1; }
+  .profile-name { font-size: 21px; font-weight: 700; line-height: 1.08; color: #fff; }
+  .profile-career { color: var(--blue); font-size: 13px; font-weight: 600; margin-top: 5px; }
+  .profile-age { color: #D4D4D8; font-size: 12.5px; }
+  .pill-green {
+    flex: none; padding: 4px 14px; border: 1px solid var(--green); border-radius: 999px;
+    color: var(--green); font-size: 12.5px; font-weight: 500; transition: all .15s ease;
+  }
+  .pill-green:hover { background: var(--green); color: #fff; }
+  .profile-bio { color: #D4D4D8; font-size: 12.5px; line-height: 1.4; margin-top: 14px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+  .stats button {
+    padding: 10px 8px; text-align: center; color: #fff;
+    border: 1px solid #A1A1AA; border-radius: 16px; background: rgba(255, 255, 255, .03);
+    transition: border-color .15s ease;
+  }
+  .stats button:hover { border-color: #fff; }
+  .stats b { display: block; font-size: 22px; font-weight: 400; line-height: 1; }
+  .stats span { display: block; font-size: 11.5px; color: #D4D4D8; margin-top: 4px; }
+
+  /* ---------- Inicio: banner del mapa ---------- */
+  .map-banner {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    width: 100%; text-align: left; color: #fff; padding: 16px;
+    border: 1px solid rgba(16, 185, 129, .3); border-radius: 24px;
+    background: linear-gradient(100deg, #1A2E26, #1E3A2F 55%, #232323);
+    transition: filter .15s ease;
+  }
+  .map-banner:hover { filter: brightness(1.12); }
+  .map-banner-body { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  .map-banner-icon {
+    width: 48px; height: 48px; flex: none; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(21, 184, 108, .2); border: 1px solid rgba(21, 184, 108, .5); color: var(--green);
+  }
+  .map-banner-icon .icon { width: 24px; height: 24px; }
+  .map-badge {
+    display: inline-block; background: var(--green); color: #000;
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    padding: 2px 8px; border-radius: 999px; margin-bottom: 4px;
+  }
+  .map-banner-title { font-size: 14.5px; font-weight: 700; line-height: 1.3; }
+  .map-banner-sub { font-size: 11.5px; color: rgba(167, 243, 208, .85); margin-top: 2px; }
+  .map-banner > .icon { color: #34D399; }
+  .map-banner:hover > .icon { transform: translateX(3px); }
+  .map-banner > .icon { transition: transform .15s ease; }
+
+  /* ---------- Inicio: alertas ---------- */
+  .section-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 4px 4px 10px; }
+  .section-title { display: flex; align-items: center; gap: 8px; }
+  .section-title h3 { font-size: 15px; font-weight: 800; }
+  .count-pill {
+    background: #E4E4E7; color: #3F3F46; font-size: 11px; font-weight: 600;
+    padding: 2px 9px; border-radius: 999px; white-space: nowrap;
+  }
+  .alert-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 20px; padding: 16px; }
+  .alert-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .badge {
+    display: inline-block; font-size: 10.5px; font-weight: 700;
+    padding: 2px 10px; border-radius: 999px; border: 1px solid transparent;
+  }
+  .badge.blue { background: rgba(59, 130, 246, .1); color: #2563EB; border-color: rgba(59, 130, 246, .2); }
+  .badge.emerald { background: rgba(16, 185, 129, .1); color: #047857; border-color: rgba(16, 185, 129, .2); }
+  .badge.purple { background: rgba(168, 85, 247, .1); color: #7E22CE; border-color: rgba(168, 85, 247, .2); }
+  .alert-meta { display: flex; align-items: center; gap: 8px; flex: none; }
+  .alert-time { font-size: 11px; color: #9CA3AF; }
+  .alert-dismiss { color: #9CA3AF; padding: 2px; border-radius: 6px; }
+  .alert-dismiss:hover { color: #3F3F46; background: #F4F4F5; }
+  .alert-card h4 { font-size: 14px; font-weight: 700; line-height: 1.3; }
+  .alert-card p { font-size: 12.5px; color: #4B5563; line-height: 1.5; margin-top: 4px; }
+  .alert-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
+  .btn-dark {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--dark); color: #fff; font-size: 12px; font-weight: 700;
+    padding: 7px 14px; border-radius: 12px;
+  }
+  .btn-dark:hover { background: #000; }
+
+  /* ---------- Filtros y buscador ---------- */
+  .search-wrap { position: relative; display: flex; align-items: center; }
+  .search-wrap > .icon { position: absolute; left: 14px; color: #9CA3AF; }
+  .search-wrap input {
+    width: 100%; background: #F4F4F5; border: 0; border-radius: 16px;
+    padding: 11px 16px 11px 40px; font-size: 12px; font-weight: 500; outline: none;
+  }
+  .search-wrap input:focus { box-shadow: 0 0 0 2px var(--dark); }
+  .chips-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+  .chips-row::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: none; padding: 6px 12px; border-radius: 12px;
+    background: #F4F4F5; color: #52525B; font-size: 12px; font-weight: 700;
+    transition: background .15s ease, color .15s ease;
+  }
+  .chip:hover { background: #E4E4E7; }
+  .chip.active { background: var(--dark); color: #fff; }
+  .shift-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    background: #F4F4F5; border-radius: 16px; padding: 6px;
+  }
+  .shift-bar > span { font-size: 11px; font-weight: 700; color: #6B7280; padding-left: 10px; }
+  .shift-bar > div { display: flex; gap: 4px; }
+  .shift {
+    padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; color: #52525B;
+    transition: background .15s ease, color .15s ease;
+  }
+  .shift:hover { background: #E4E4E7; }
+  .shift.active { background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, .12); }
+
+  /* ---------- Deportes ---------- */
+  .sport-card { background: var(--dark); color: #fff; border: 1px solid #2F2F2F; border-radius: 22px; padding: 16px; }
+  .sport-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .sport-cat { font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--green); }
+  .sport-name { font-size: 17px; font-weight: 700; color: #fff; margin-top: 2px; }
+  .branch-toggle { display: flex; gap: 4px; background: #141414; border: 1px solid #3F3F46; border-radius: 12px; padding: 4px; flex: none; }
+  .branch-toggle button {
+    padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; color: #A1A1AA;
+    transition: background .15s ease, color .15s ease;
+  }
+  .branch-toggle button:hover { color: #fff; }
+  .branch-toggle button.active { background: var(--blue); color: #fff; }
+  .sport-tag {
+    flex: none; padding: 4px 10px; border-radius: 12px; background: #3F3F46;
+    border: 1px solid #52525B; color: #D4D4D8; font-size: 11px; font-weight: 600; text-align: right;
+  }
+  .sport-details {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    margin-top: 12px; padding-top: 12px; border-top: 1px solid #3F3F46;
+    font-size: 12px; color: #D4D4D8;
+  }
+  .sport-details > div { display: flex; align-items: center; gap: 6px; min-width: 0; }
+  .sport-details .icon { color: var(--green); }
+  .sport-details > div:first-child .icon { color: var(--blue); }
+  .sport-details span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sport-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; }
+  .sport-coach { font-size: 11.5px; color: #A1A1AA; min-width: 0; }
+  .sport-coach strong { color: #34D399; }
+  .btn-enroll {
+    flex: none; display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 16px; border-radius: 12px; font-size: 12px; font-weight: 700;
+    background: #fff; color: var(--ink); transition: background .15s ease;
+  }
+  .btn-enroll:hover { background: #E4E4E7; }
+  .btn-enroll.on { background: var(--green); color: #fff; }
+  .empty { text-align: center; padding: 28px 16px; color: #9CA3AF; font-size: 12.5px; border: 1px dashed #D4D4D8; border-radius: 18px; }
+
+  /* ---------- Mente ---------- */
+  .mente-hero { position: relative; overflow: hidden; }
+  .badge-conf {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(168, 85, 247, .2); border: 1px solid rgba(192, 132, 252, .35);
+    color: #D8B4FE; font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 999px;
+  }
+  .mente-hero h3 { font-size: 19px; font-weight: 700; line-height: 1.3; margin-top: 8px; }
+  .mente-hero p { font-size: 12px; color: #D4D4D8; line-height: 1.55; margin-top: 6px; }
+  .form-card { display: flex; flex-direction: column; gap: 14px; }
+  .form-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .form-card-head h4 { font-size: 15px; font-weight: 800; }
+  .mini-pill {
+    flex: none; background: #ECFDF5; color: #047857; font-size: 11px; font-weight: 700;
+    padding: 2px 10px; border-radius: 999px; white-space: nowrap;
+  }
+  .label-sm { display: block; font-size: 11.5px; font-weight: 700; color: #4B5563; margin-bottom: 6px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .seg button {
+    padding: 8px 12px; border-radius: 12px; border: 1px solid var(--line);
+    background: #F9FAFB; color: #4B5563; font-size: 12px; font-weight: 700; transition: all .15s ease;
+  }
+  .seg button.active { background: var(--dark); border-color: var(--dark); color: #fff; }
+  select, .text-input, textarea {
+    width: 100%; background: #F4F4F5; border: 1px solid transparent; border-radius: 12px;
+    padding: 8px 12px; font-size: 12px; font-weight: 600; color: #1F2937; outline: none;
+  }
+  select:focus, .text-input:focus, textarea:focus { border-color: var(--dark); background: #fff; }
+  .btn-green { background: var(--green); color: #fff; padding: 13px 16px; border-radius: 16px; font-size: 12px; font-weight: 700; width: 100%; }
+  .btn-green:hover { background: #10A05C; }
+  .workshop { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px; border-radius: 16px; background: #F9FAFB; border: 1px solid #E5E7EB; }
+  .workshop p { font-size: 12px; font-weight: 700; color: #111827; }
+  .workshop small { display: block; font-size: 11px; color: #6B7280; margin-top: 2px; }
+  .workshop small b { color: #9333EA; font-weight: 600; }
+  .btn-mini { flex: none; padding: 6px 12px; border-radius: 12px; background: var(--dark); color: #fff; font-size: 11px; font-weight: 700; }
+  .btn-mini.on { background: #9333EA; }
+  .bridge { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #022C22; color: #fff; border-radius: 22px; padding: 16px; }
+  .bridge h5 { font-size: 12px; font-weight: 700; margin-top: 2px; }
+  .bridge p { font-size: 11px; color: rgba(167, 243, 208, .8); }
+  .bridge .eyebrow { color: #34D399; }
+  .btn-calm { flex: none; padding: 8px 12px; border-radius: 12px; background: var(--green); color: #000; font-size: 12px; font-weight: 700; }
+
+  /* ---------- Grupos ---------- */
+  .group-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-radius: 24px; }
+  .group-head h3 { font-size: 14px; font-weight: 700; }
+  .group-head p { font-size: 12px; color: #D4D4D8; margin-top: 2px; line-height: 1.45; }
+  .btn-create {
+    flex: none; display: inline-flex; align-items: center; gap: 4px;
+    background: var(--green); color: #000; padding: 10px 14px; border-radius: 16px; font-size: 12px; font-weight: 700;
+  }
+  .btn-create:hover { background: #34D399; }
+  .map-link {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left;
+    background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 16px; padding: 14px;
+  }
+  .map-link p:first-child { font-size: 12px; font-weight: 700; color: #022C22; }
+  .map-link p + p { font-size: 11px; color: #047857; margin-top: 1px; }
+  .map-link-body { display: flex; align-items: center; gap: 12px; }
+  .map-link .icon { color: #047857; }
+  .group-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .sport-chip { display: inline-block; background: #EFF6FF; color: var(--blue); font-size: 10.5px; font-weight: 700; padding: 2px 10px; border-radius: 999px; }
+  .group-card h4 { font-size: 15px; font-weight: 700; margin-top: 6px; }
+  .group-card .creator { font-size: 11.5px; color: #6B7280; }
+  .members-pill { flex: none; background: #F4F4F5; color: #3F3F46; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 12px; }
+  .group-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #F3F4F6; }
+  .group-when { font-size: 12px; font-weight: 600; color: #1F2937; }
+  .group-where { font-size: 11px; color: #6B7280; margin-top: 1px; }
+  .btn-join { flex: none; padding: 8px 16px; border-radius: 12px; background: var(--dark); color: #fff; font-size: 12px; font-weight: 700; }
+  .btn-join:hover { background: #000; }
+  .btn-join.on { background: var(--green); }
+
+  /* ---------- Mi Cursada ---------- */
+  .agenda-summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-radius: 24px; }
+  .agenda-summary h3 { font-size: 14px; font-weight: 700; margin-top: 2px; }
+  .agenda-summary p { font-size: 11px; color: #A1A1AA; margin-top: 2px; }
+  .btn-white-sm { flex: none; background: #fff; color: var(--ink); font-size: 12px; font-weight: 700; padding: 8px 12px; border-radius: 12px; }
+  .day-tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .day-tabs button {
+    padding: 8px 0; border-radius: 14px; background: #F4F4F5; color: #52525B;
+    font-size: 12px; font-weight: 700; transition: all .15s ease;
+  }
+  .day-tabs button:hover { background: #E4E4E7; }
+  .day-tabs button.active { background: var(--dark); color: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, .15); }
+  .timeline-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #9CA3AF; padding: 0 4px; }
+  .class-card { background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--blue); border-radius: 16px; padding: 16px; }
+  .class-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .class-top span:first-child { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--blue); }
+  .class-top span:last-child { font-size: 12px; font-weight: 700; color: #3F3F46; }
+  .class-card h5 { font-size: 14px; font-weight: 700; margin-top: 4px; }
+  .class-card p { font-size: 12px; color: #6B7280; margin-top: 2px; }
+  .gap-card {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: rgba(236, 253, 245, .7); border: 1px dashed #34D399; border-radius: 16px; padding: 14px;
+  }
+  .gap-card .eyebrow { color: #047857; }
+  .gap-card p { font-size: 12px; font-weight: 600; color: #022C22; margin-top: 2px; }
+  .gap-card button { flex: none; background: var(--green); color: #fff; font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 12px; }
+  .act-card {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: var(--dark); color: #fff; border-left: 4px solid var(--green);
+    border-radius: 16px; padding: 16px;
+  }
+  .act-card .eyebrow { color: var(--green); }
+  .act-card h5 { font-size: 14px; font-weight: 700; margin-top: 2px; }
+  .act-card p { font-size: 12px; color: #D4D4D8; margin-top: 2px; }
+  .act-delete { flex: none; color: #A1A1AA; padding: 6px; border-radius: 10px; }
+  .act-delete:hover { color: #F87171; background: rgba(255, 255, 255, .06); }
+
+  /* ---------- Barra inferior ---------- */
+  .nav-wrap {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 20;
+    padding: 8px 16px 20px;
+    background: linear-gradient(to top, #fff 55%, rgba(255, 255, 255, 0));
+  }
+  .nav {
+    display: flex; align-items: center; justify-content: space-around;
+    background: var(--dark); border: 1px solid #2F2F2F; border-radius: 26px;
+    padding: 10px 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, .2);
+  }
+  .nav button {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    padding: 4px 10px; border-radius: 16px; color: #D4D4D8; transition: color .15s ease, transform .15s ease;
+  }
+  .nav button:hover { color: #fff; }
+  .nav button span { font-size: 11px; letter-spacing: -.01em; }
+  .nav button.active { color: var(--blue); transform: scale(1.05); }
+  .nav button.active span { font-weight: 700; }
+
+  /* ---------- Modales ---------- */
+  .overlay {
+    position: absolute; inset: 0; z-index: 50;
+    background: rgba(0, 0, 0, .7);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .modal {
+    width: 100%; max-height: 100%; overflow-y: auto;
+    background: var(--dark); color: #fff;
+    border: 1px solid #3F3F46; border-radius: 28px; padding: 20px;
+    display: flex; flex-direction: column; gap: 14px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, .6);
+  }
+  .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .modal-head h3 { font-size: 16px; font-weight: 700; }
+  .modal .field-dark label { display: block; font-size: 11px; color: #A1A1AA; margin-bottom: 4px; }
+  .modal .field-dark input, .modal .field-dark select, .modal .field-dark textarea {
+    width: 100%; background: #fff; color: #111827; border: 1px solid #fff;
+    border-radius: 12px; padding: 8px 12px; font-size: 12px; font-weight: 600; outline: none;
+  }
+  .modal .field-dark input:focus, .modal .field-dark select:focus, .modal .field-dark textarea:focus { border-color: var(--green); }
+  .modal .switch-row { background: #3F3F46; border-radius: 16px; padding: 12px; font-size: 12px; color: #D4D4D8; }
+  .modal .switch { width: 44px; height: 24px; }
+  .modal .switch::after { width: 18px; height: 18px; }
+  .modal .switch-input:checked + .switch::after { transform: translateX(20px); }
+  .grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
+  .modal-actions { display: flex; gap: 8px; padding-top: 4px; }
+  .modal-actions .btn { flex: 1; padding: 10px; font-size: 12px; border-radius: 12px; }
+  .btn-outline { border: 1px solid #52525B; color: #D4D4D8; font-weight: 600; }
+  .btn-outline:hover { background: #3F3F46; }
+  .modal .btn-green { padding: 12px; border-radius: 12px; font-size: 12px; }
+
+  /* ---------- Mapa ---------- */
+  .map-screen { position: absolute; inset: 0; z-index: 60; display: flex; flex-direction: column; background: #141A17; color: #fff; }
+  .map-head { padding: 20px 20px 12px; background: rgba(28, 36, 32, .96); border-bottom: 1px solid rgba(6, 78, 59, .5); }
+  .map-head-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+  .map-head .eyebrow { color: var(--green); font-size: 10px; }
+  .map-head h2 { font-size: 19px; font-weight: 800; line-height: 1.2; margin-top: 2px; }
+  .map-screen .chips-row .chip { background: rgba(63, 63, 70, .9); color: #D4D4D8; }
+  .map-screen .chips-row .chip:hover { background: #52525B; }
+  .map-screen .chips-row .chip.active { background: var(--green); color: #000; }
+  .map-canvas { position: relative; flex: 1; min-height: 180px; background: #16221C; overflow: hidden; }
+  .map-canvas > svg { width: 100%; height: 100%; display: block; }
+  .route-pin { cursor: pointer; }
+  .map-route-chips { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+  .map-route-chips::-webkit-scrollbar { display: none; }
+  .map-route-chips button {
+    flex: none; padding: 6px 12px; border-radius: 12px; font-size: 11px; font-weight: 700;
+    background: rgba(0, 0, 0, .5); color: #D4D4D8; border: 1px solid rgba(255, 255, 255, .2);
+    backdrop-filter: blur(6px);
+  }
+  .map-route-chips button.active { background: rgba(0, 0, 0, .85); color: #fff; border-color: #fff; }
+  .map-info {
+    background: var(--dark); border-top: 1px solid #52525B;
+    border-radius: 30px 30px 0 0; padding: 20px;
+    display: flex; flex-direction: column; gap: 14px;
+    max-height: 48%; overflow-y: auto;
+  }
+  .map-info-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .map-type { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 10px; border-radius: 999px; }
+  .map-info h4 { font-size: 16px; font-weight: 800; margin-top: 4px; }
+  .map-distance { text-align: right; flex: none; }
+  .map-distance b { display: block; font-size: 18px; font-weight: 900; color: var(--green); line-height: 1; }
+  .map-distance span { display: block; font-size: 11px; color: #A1A1AA; margin-top: 2px; }
+  .map-desc { font-size: 12px; color: #D4D4D8; line-height: 1.55; }
+  .poi-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .poi {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #3F3F46; border: 1px solid #52525B; color: #E4E4E7;
+    font-size: 11px; padding: 4px 10px; border-radius: 12px;
+  }
+  .poi.water .icon { color: #60A5FA; }
+  .poi.tree .icon { color: #34D399; }
+  .poi.bike .icon { color: #FBBF24; }
+  .poi.bench .icon { color: #C084FC; }
+  .map-join { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .map-join-info { font-size: 11.5px; color: #D4D4D8; }
+  .map-join-info strong { color: #fff; }
+  .map-join-info .count { color: #34D399; font-size: 11px; }
+  .btn-route-join {
+    flex: none; padding: 10px 16px; border-radius: 16px; font-size: 12px; font-weight: 700;
+    background: #fff; color: #000;
+  }
+  .btn-route-join:hover { background: #E4E4E7; }
+  .btn-route-join.on { background: var(--green); }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; top: 20px; left: 50%; z-index: 100;
+    width: min(390px, calc(100vw - 32px));
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(30, 30, 30, .96); color: #fff;
+    border: 1px solid #3F3F46; border-radius: 16px; padding: 12px 16px;
+    box-shadow: 0 12px 24px -8px rgba(0, 0, 0, .45);
+    font-size: 12px; font-weight: 500; line-height: 1.35;
+    opacity: 0; pointer-events: none;
+    transform: translate(-50%, -10px);
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast .icon { color: var(--green); }
+
+  /* ---------- Ajustes finales ---------- */
+  .map-banner-title { display: block; }
+  .map-banner-sub { display: block; }
+  .modal p.hint { font-size: 12px; color: #D4D4D8; line-height: 1.55; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 520px) {
+    .shell { padding: 0; align-items: stretch; }
+    .phone { width: 100%; height: 100vh; height: 100dvh; border: 0; border-radius: 0; box-shadow: none; }
+    .login-phone { padding: 36px 22px 24px; }
+    .app-main { padding-left: 16px; padding-right: 16px; }
+    .nav-wrap { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9.5 2A2.5 2.5 0 0 0 7 4.5v.2A3 3 0 0 0 5.2 10a3 3 0 0 0 .3 4.7A3 3 0 0 0 9 19.5h.5a2.5 2.5 0 0 0 5 0"/><path d="M14.5 2A2.5 2.5 0 0 1 17 4.5v.2a3 3 0 0 1 1.8 5.3 3 3 0 0 1-.3 4.7 3 3 0 0 1-3.5 4.8h-.5a2.5 2.5 0 0 1-5 0"/><path d="M12 2v20"/></symbol>
+    <symbol id="i-dumbbell" viewBox="0 0 24 24"><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></symbol>
+    <symbol id="i-navigation" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></symbol>
+    <symbol id="i-droplets" viewBox="0 0 24 24"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7Z"/></symbol>
+    <symbol id="i-trees" viewBox="0 0 24 24"><path d="M12 22v-4"/><path d="M12 18H7.4a2 2 0 0 1-1.46-3.36L12 8l6.06 6.64A2 2 0 0 1 16.6 18H12Z"/><path d="M12 13 8.5 8.5A2 2 0 0 1 10 5h4a2 2 0 0 1 1.5 3.5L12 13Z"/></symbol>
+    <symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></symbol>
+    <symbol id="i-footprints" viewBox="0 0 24 24"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"/><path d="M16 17h4M4 13h4"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M12 8v4M12 16h.01"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></symbol>
+  </defs>
+</svg>
+
+<div id="app"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+  const esc = (value) => String(value == null ? '' : value).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+  const icon = (name, cls = '') => '<svg class="icon ' + cls + '" aria-hidden="true"><use href="#i-' + name + '"></use></svg>';
+
+  /* =======================================================================
+     DATOS: 13 DISCIPLINAS DEPORTIVAS DE FADU
+     ======================================================================= */
+  const SPORTS = [
+    { id: 'sp-1', name: 'Básquet', category: 'Equipo', shift: 'Tarde', hasBranches: true, branches: {
+      Masculino: { day: 'Miércoles', time: '18:00 - 20:00 hs', location: 'Campo de Deportes UBA', coach: 'Prof. Marcos Díaz', spots: 4 },
+      Femenino: { day: 'Jueves', time: '18:00 - 20:00 hs', location: 'Campo de Deportes UBA', coach: 'Prof. Lucía Gómez', spots: 6 }
+    } },
+    { id: 'sp-2', name: 'Fútbol 11', category: 'Equipo', shift: 'Tarde', hasBranches: false, tag: 'Masculino',
+      schedule: { day: 'Martes', time: '14:00 - 16:00 hs', location: 'Cancha 1 · Campo UBA', coach: 'Prof. Diego Silva', spots: 5 } },
+    { id: 'sp-3', name: 'Futsal', category: 'Equipo', shift: 'Noche', hasBranches: true, branches: {
+      Masculino: { day: 'Lunes', time: '19:00 - 21:00 hs', location: 'Gimnasio Cubierto UBA', coach: 'Prof. Hernán Ruiz', spots: 2 },
+      Femenino: { day: 'Miércoles', time: '19:00 - 21:00 hs', location: 'Gimnasio Cubierto UBA', coach: 'Prof. Carla Méndez', spots: 5 }
+    } },
+    { id: 'sp-4', name: 'Fútbol 5 mixto', category: 'Equipo', shift: 'Tarde', hasBranches: false, tag: 'Mixto',
+      schedule: { day: 'Viernes', time: '13:00 - 14:30 hs', location: 'Canchas Sintético UBA', coach: 'Recreativo FADU', spots: 3 } },
+    { id: 'sp-5', name: 'Handball', category: 'Equipo', shift: 'Noche', hasBranches: true, branches: {
+      Masculino: { day: 'Martes', time: '20:00 - 22:00 hs', location: 'Polideportivo UBA', coach: 'Prof. Esteban Paz', spots: 7 },
+      Femenino: { day: 'Jueves', time: '20:00 - 22:00 hs', location: 'Polideportivo UBA', coach: 'Prof. Sofía Vega', spots: 4 }
+    } },
+    { id: 'sp-6', name: 'Hockey', category: 'Equipo', shift: 'Tarde', hasBranches: false, tag: 'Femenino',
+      schedule: { day: 'Miércoles', time: '13:00 - 15:00 hs', location: 'Cancha Hockey UBA', coach: 'Prof. Valentina Ríos', spots: 8 } },
+    { id: 'sp-7', name: 'Ajedrez', category: 'Individual y Mesa', shift: 'Tarde', hasBranches: false, tag: 'Mixto / Abierto',
+      schedule: { day: 'Jueves', time: '13:00 - 15:00 hs', location: 'Pabellón III · Patio Central', coach: 'Club Ajedrez FADU', spots: 12 } },
+    { id: 'sp-8', name: 'Tenis', category: 'Individual y Mesa', shift: 'Mañana', hasBranches: true, branches: {
+      Masculino: { day: 'Martes', time: '11:00 - 13:00 hs', location: 'Canchas Polvo de Ladrillo', coach: 'Prof. Gastón Gaudio', spots: 3 },
+      Femenino: { day: 'Jueves', time: '11:00 - 13:00 hs', location: 'Canchas Polvo de Ladrillo', coach: 'Prof. Paola Suárez', spots: 4 }
+    } },
+    { id: 'sp-9', name: 'Tenis de mesa', category: 'Individual y Mesa', shift: 'Tarde', hasBranches: false, tag: 'Mixto / Abierto',
+      schedule: { day: 'Lunes', time: '12:30 - 14:30 hs', location: 'Pabellón III · Subsuelo', coach: 'Torneo Libre FADU', spots: 10 } },
+    { id: 'sp-10', name: 'Entrenamiento funcional', category: 'Cuerpo y Calma', shift: 'Tarde', hasBranches: false, tag: 'Mixto',
+      schedule: { day: 'Lunes', time: '17:30 - 18:30 hs', location: 'Explanada Pabellón III', coach: 'Prof. Nico Ferraro', spots: 9 } },
+    { id: 'sp-11', name: 'Pilates mat', category: 'Cuerpo y Calma', shift: 'Mañana', hasBranches: false, tag: 'Bienestar Postural',
+      schedule: { day: 'Miércoles', time: '11:00 - 12:30 hs', location: 'Salón Espejos · Campo UBA', coach: 'Prof. Clara Ortiz', spots: 5 } },
+    { id: 'sp-12', name: 'Stretching', category: 'Cuerpo y Calma', shift: 'Tarde', hasBranches: false, tag: 'Pausa Pre-Entrega',
+      schedule: { day: 'Jueves', time: '17:30 - 18:30 hs', location: 'Pabellón III · Aula 304', coach: 'Prof. Ana Belén', spots: 6 } },
+    { id: 'sp-13', name: 'Yoga', category: 'Cuerpo y Calma', shift: 'Tarde', hasBranches: false, tag: 'Calma y Respiración',
+      schedule: { day: 'Martes', time: '12:30 - 14:00 hs', location: 'Reserva / Pasto frente al Río', coach: 'Prof. Maitena Sol', spots: 8 } }
+  ];
+
+  /* =======================================================================
+     DATOS: RUTAS VERDES Y CIRCUITOS COSTANERA
+     ======================================================================= */
+  const ROUTES = [
+    { id: 'rt-1', title: 'Circuito Costanera Norte & Río', type: 'Running', distance: '4.2 km', duration: '24 min',
+      difficulty: 'Moderado', color: '#2563EB', day: 'Martes', time: '18:00 hs',
+      description: 'Recorrido clásico saliendo desde la puerta de Pabellón III hacia el borde costero, bordeando el Río de la Plata con brisa fresca ideal post-taller.',
+      path: 'M 90 190 Q 150 180 190 130 T 270 70 Q 310 90 290 160 T 180 220 Z',
+      pois: [
+        { name: 'Hidratación Pabellón III', icon: 'water', x: 90, y: 190 },
+        { name: 'Mirador del Río de la Plata', icon: 'tree', x: 270, y: 70 },
+        { name: 'Posta de Elongación Sur', icon: 'bench', x: 180, y: 220 }
+      ], groupRunners: 8 },
+    { id: 'rt-2', title: 'Sendero Reserva Ecológica Norte', type: 'Caminata', distance: '2.5 km', duration: '35 min',
+      difficulty: 'Suave · Pausa Activa', color: '#10B981', day: 'Jueves', time: '12:30 hs',
+      description: 'Caminata regenerativa entre teóricas atravesando el puente hacia la Reserva Ecológica Ciudad Universitaria. Sombra natural, aves y silencio.',
+      path: 'M 90 190 L 140 210 Q 210 250 260 210 T 310 150',
+      pois: [
+        { name: 'Acceso Reserva Natural', icon: 'tree', x: 140, y: 210 },
+        { name: 'Bancos bajo los Sauces', icon: 'bench', x: 240, y: 225 },
+        { name: 'Mirador Humedal', icon: 'tree', x: 310, y: 150 }
+      ], groupRunners: 14 },
+    { id: 'rt-3', title: 'Vuelta Olímpica Ciudad Universitaria + Puente', type: 'Bicicleta', distance: '6.8 km', duration: '20 min',
+      difficulty: 'Exigente', color: '#F59E0B', day: 'Miércoles', time: '17:00 hs',
+      description: 'Circuito rápido por ciclovía interna conectando Pabellón I, II y III, cruzando el Puente Labruna con retorno por parques del norte.',
+      path: 'M 90 190 C 50 130, 80 60, 160 65 S 280 110, 260 185 S 130 240, 90 190',
+      pois: [
+        { name: 'Bicicletero Seguro FADU', icon: 'bike', x: 90, y: 190 },
+        { name: 'Estación EcoBici Pabellón II', icon: 'bike', x: 160, y: 65 },
+        { name: 'Puesto de Agua Campo UBA', icon: 'water', x: 260, y: 185 }
+      ], groupRunners: 6 }
+  ];
+
+  /* =======================================================================
+     DATOS: HORARIOS ACADÉMICOS BASE
+     ======================================================================= */
+  const BASE_SCHEDULE = [
+    { id: 'ac-1', title: 'Arquitectura I · Taller', day: 'Lunes', time: '08:30 - 12:30 hs', location: 'Taller 302 · Pab. III' },
+    { id: 'ac-2', title: 'Sistemas de Representación Geométrica', day: 'Martes', time: '08:30 - 12:30 hs', location: 'Aula 214 · Pab. III' },
+    { id: 'ac-3', title: 'Introducción al Conocimiento Proyectual', day: 'Miércoles', time: '14:00 - 18:00 hs', location: 'Taller 105 · Pab. III' },
+    { id: 'ac-4', title: 'Arquitectura I · Práctica', day: 'Jueves', time: '08:30 - 12:30 hs', location: 'Taller 302 · Pab. III' },
+    { id: 'ac-5', title: 'Matemática II · Teórica', day: 'Viernes', time: '09:00 - 13:00 hs', location: 'Microcine · Pab. III' }
+  ];
+
+  /* =======================================================================
+     DATOS: GRUPOS ESTUDIANTILES
+     ======================================================================= */
+  const BASE_GROUPS = [
+    { id: 'gr-1', title: 'Running Costanera Post-Taller', sport: 'Running · 5K suaves', day: 'Martes y Jueves', time: '18:00 hs',
+      meetingPoint: 'Puerta principal Pabellón III (lado paradas)', members: 14, maxMembers: 20, creator: 'Sofi (DG - Nivel 2)', joined: true },
+    { id: 'gr-2', title: 'Fútbol 5 Mixto entre Entregas', sport: 'Fútbol 5 mixto', day: 'Viernes', time: '13:00 hs',
+      meetingPoint: 'Canchas Sintético Campo UBA', members: 8, maxMembers: 10, creator: 'Tomás (Arq - CBC)', joined: false },
+    { id: 'gr-3', title: 'Ajedrez & Mate en el Patio', sport: 'Ajedrez', day: 'Miércoles', time: '12:30 hs',
+      meetingPoint: 'Mesas del Patio Central Pabellón III', members: 9, maxMembers: 16, creator: 'Lucas (DI - Nivel 3)', joined: false },
+    { id: 'gr-4', title: 'Peloteo de Tenis Mañana Libre', sport: 'Tenis', day: 'Martes', time: '11:00 hs',
+      meetingPoint: 'Canchas Tenis UBA', members: 3, maxMembers: 4, creator: 'Martina (Indumentaria)', joined: false }
+  ];
+
+  /* =======================================================================
+     DATOS: ALERTAS Y TALLERES
+     ======================================================================= */
+  const BASE_ALERTS = [
+    { id: 'al-1', category: 'Bache Libre · Cruce de Horarios', title: 'Tenés 2 hs libres entre Teórica y Taller',
+      message: 'Hoy de 12:00 a 14:00 hs tenés un hueco libre. ¿Querés sumarte a la caminata grupal por Costanera o hacer Yoga frente al río?',
+      time: 'Hace 5 min', accent: 'blue', actionLabel: 'Ver en Mapa', target: 'map' },
+    { id: 'al-2', category: 'Deportes FADU', title: '¡Cupo confirmado en Básquet Masculino!',
+      message: 'Tu lugar para hoy a las 18:00 hs en el Campo de Deportes UBA está reservado. Falta poco para entrenar.',
+      time: 'Hace 25 min', accent: 'emerald', actionLabel: 'Mi Cursada', target: 'cursada' },
+    { id: 'al-3', category: 'Consultoría Psicológica · Mente', title: 'Taller: Ansiedad Pre-Entrega y Jury',
+      message: 'Quedan 3 lugares para el encuentro grupal de este Jueves a las 13:00 hs en Pabellón III.',
+      time: 'Hace 1 hora', accent: 'purple', actionLabel: 'Reservar lugar', target: 'mente' }
+  ];
+
+  const WORKSHOPS = [
+    { id: 'wk-1', title: 'Manejo de ansiedad pre-entrega y Jury', day: 'Jueves', time: '13:00 hs',
+      location: 'Aula 310 · Pab. III', schedule: 'Jueves 13:00 hs · Aula 310 Pab. III', spots: '3 lugares libres' },
+    { id: 'wk-2', title: 'Descanso y organización en carreras proyectuales', day: 'Viernes', time: '14:00 hs',
+      location: 'Modalidad Híbrida', schedule: 'Viernes 14:00 hs · Modalidad Híbrida', spots: '7 lugares libres' }
+  ];
+
+  /* =======================================================================
+     ESTADO
+     ======================================================================= */
+  const state = {
+    loggedIn: false,
+    tab: 'inicio',
+    modal: null,
+    loginError: '',
+    cuil: '20-45892103-4',
+    password: '••••••••••',
+    keepLogged: true,
+    profile: {
+      firstName: 'Pedro', lastName: 'Blanc', career: 'Arquitectura - CBC', age: 20,
+      bio: 'Sobreviviendo a las entregas de taller. Siempre listo para unos Kms por Costanera en mis fechas libres',
+      huecosLibres: 6, showPhotoAvatar: false
+    },
+    sports: {
+      cat: 'Todos', shift: 'Todos', search: '',
+      branch: { 'sp-1': 'Masculino', 'sp-3': 'Masculino', 'sp-5': 'Masculino', 'sp-8': 'Masculino' }
+    },
+    psych: {
+      modality: 'Presencial (Pab. III)', day: 'Jueves', time: '14:00 hs (Hueco post-taller)',
+      reason: 'Ansiedad con las entregas / Organización'
+    },
+    workshops: [],
+    alerts: BASE_ALERTS.map((a) => Object.assign({}, a)),
+    groups: BASE_GROUPS.map((g) => Object.assign({}, g)),
+    academic: BASE_SCHEDULE.map((m) => Object.assign({}, m)),
+    enrolled: [
+      { id: 'init-1', title: 'Básquet (Masculino)', day: 'Miércoles', time: '18:00 - 20:00 hs', location: 'Campo de Deportes UBA', type: 'deporte', sourceId: 'sp-1-Masculino' },
+      { id: 'init-2', title: 'Salida: Circuito Costanera Norte', day: 'Martes', time: '18:00 hs', location: 'Puerta Pabellón III', type: 'ruta', sourceId: 'rt-1' }
+    ],
+    day: 'Miércoles',
+    routes: { type: 'Todos', selectedId: 'rt-1', joined: ['rt-1'] }
+  };
+
+  let seq = 0;
+  const nextId = (prefix) => prefix + '-' + (++seq) + '-' + Date.now().toString(36);
+
+  /* =======================================================================
+     UTILIDADES DE ESTADO
+     ======================================================================= */
+  const app = document.getElementById('app');
+  let toastTimer = null;
+
+  function showToast(message) {
+    const el = document.getElementById('toast');
+    el.innerHTML = icon('check-circle', 'sm') + '<span>' + esc(message) + '</span>';
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+  }
+
+  const hasSource = (key) => state.enrolled.some((a) => a.sourceId === key);
+  const removeSource = (key) => { state.enrolled = state.enrolled.filter((a) => a.sourceId !== key); };
+
+  function addActivity(activity) {
+    state.enrolled.unshift(Object.assign({ id: nextId('act') }, activity));
+  }
+
+  function addAlert(alert) {
+    state.alerts.unshift(Object.assign({ id: nextId('al'), time: 'Recién' }, alert));
+  }
+
+  const TITLES = {
+    inicio: 'Inicio',
+    deportes: 'Deportes',
+    mente: 'Consultoría Psicológica',
+    grupos: 'Grupos y Comunidad',
+    cursada: 'Mi Cursada'
+  };
+  const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+  const CATEGORIES = ['Todos', 'Equipo', 'Individual y Mesa', 'Cuerpo y Calma'];
+  const SHIFTS = ['Todos', 'Mañana', 'Tarde', 'Noche'];
+  const NAV = [
+    { id: 'mente', label: 'Mente', icon: 'brain' },
+    { id: 'deportes', label: 'Deportes', icon: 'dumbbell' },
+    { id: 'inicio', label: 'Inicio', icon: 'home' },
+    { id: 'grupos', label: 'Grupos', icon: 'users' },
+    { id: 'cursada', label: 'Mi Cursada', icon: 'calendar' }
+  ];
+
+  /* =======================================================================
+     RENDER
+     ======================================================================= */
+  function render(resetScroll) {
+    const current = $('.app-main');
+    const scrollTop = current ? current.scrollTop : 0;
+    app.innerHTML = state.loggedIn ? appView() : loginView();
+    const next = $('.app-main');
+    if (next) next.scrollTop = resetScroll ? 0 : scrollTop;
+  }
+
+  function viewFor(tab) {
+    if (tab === 'deportes') return deportesView();
+    if (tab === 'mente') return menteView();
+    if (tab === 'grupos') return gruposView();
+    if (tab === 'cursada') return cursadaView();
+    return inicioView();
+  }
+
+  /* =======================================================================
+     LOGIN
+     ======================================================================= */
+  function loginView() {
+    return '' +
+    '<div class="shell"><div class="phone login-phone">' +
+      '<div class="login-head">' +
+        '<div class="logo"><span class="logo-fadu">FADU</span><span class="logo-bien">Bienestar</span></div>' +
+        '<p class="login-sub">Facultad de Arquitectura, Diseño y Urbanismo</p>' +
+      '</div>' +
+      '<form id="login-form" class="login-card" novalidate>' +
+        '<div class="field">' +
+          '<label for="cuil">Usuario</label>' +
+          '<div class="input-wrap">' + icon('user', 'sm') +
+            '<input id="cuil" name="cuil" type="text" placeholder="CUIL" autocomplete="username" value="' + esc(state.cuil) + '">' +
+          '</div>' +
+        '</div>' +
+        '<div class="field">' +
+          '<div class="label-row"><label for="password">Contraseña</label>' +
+            '<button type="button" class="link" data-action="forgot">¿Olvidaste tu clave?</button></div>' +
+          '<div class="input-wrap">' + icon('lock', 'sm') +
+            '<input id="password" name="password" type="password" placeholder="Contraseña" autocomplete="current-password" value="' + esc(state.password) + '">' +
+          '</div>' +
+        '</div>' +
+        '<label class="switch-row">' +
+          '<span>Mantener sesión iniciada</span>' +
+          '<input type="checkbox" class="switch-input" id="keep-logged"' + (state.keepLogged ? ' checked' : '') + '>' +
+          '<span class="switch" aria-hidden="true"></span>' +
+        '</label>' +
+        (state.loginError ? '<p class="form-error">' + esc(state.loginError) + '</p>' : '') +
+        '<button class="btn btn-white btn-block" type="submit">Ingresar a FADU Bienestar' + icon('arrow-right', 'sm') + '</button>' +
+        '<button class="btn-demo" type="button" data-action="demo">Acceso rápido Demo: Pedro Blanc (Arquitectura - CBC)</button>' +
+      '</form>' +
+      '<div class="login-foot">' +
+        '<p>Pabellón III · Ciudad Universitaria · UBA</p>' +
+        '<p>Secretaría de Bienestar Estudiantil &amp; Deportes FADU</p>' +
+      '</div>' +
+      (state.modal === 'forgot' ? forgotModal() : '') +
+    '</div></div>';
+  }
+
+  function appView() {
+    return '' +
+    '<div class="shell"><div class="phone">' +
+      '<header class="app-header">' +
+        '<div>' +
+          '<div class="logo logo-sm"><span class="logo-fadu">FADU</span><span class="logo-bien">Bienestar</span></div>' +
+          '<h1>' + TITLES[state.tab] + '</h1>' +
+        '</div>' +
+        '<div class="header-actions">' +
+          '<button class="map-pill" data-action="open-map" title="Abrir Mapa de Rutas">' + icon('compass', 'sm') + '<span>Mapa</span></button>' +
+          '<button class="icon-btn" data-action="logout" title="Cerrar sesión" aria-label="Cerrar sesión">' + icon('logout', 'sm') + '</button>' +
+        '</div>' +
+      '</header>' +
+      '<main class="app-main">' + viewFor(state.tab) + '</main>' +
+      navView() +
+      (state.modal === 'profile' ? profileModal() : '') +
+      (state.modal === 'group' ? groupModal() : '') +
+      (state.modal === 'subject' ? subjectModal() : '') +
+      (state.modal === 'map' ? mapView() : '') +
+    '</div></div>';
+  }
+
+  function navView() {
+    return '<div class="nav-wrap"><nav class="nav" aria-label="Secciones">' +
+      NAV.map((item) => {
+        const active = state.tab === item.id;
+        return '<button data-action="go" data-tab="' + item.id + '" class="' + (active ? 'active' : '') + '"' +
+          (active ? ' aria-current="page"' : '') + '>' + icon(item.icon) + '<span>' + item.label + '</span></button>';
+      }).join('') +
+    '</nav></div>';
+  }
+
+  /* =======================================================================
+     VISTA: INICIO
+     ======================================================================= */
+  function inicioView() {
+    const p = state.profile;
+    const initials = ((p.firstName || ' ').charAt(0) + (p.lastName || ' ').charAt(0)).toUpperCase();
+    return '' +
+    '<section class="card card-dark">' +
+      '<div class="profile-top">' +
+        '<div class="profile-id">' +
+          '<button class="avatar" data-action="edit-profile" aria-label="Editar perfil">' +
+            (p.showPhotoAvatar
+              ? '<span class="avatar-initials">' + esc(initials) + '</span>'
+              : '<span>FOTO</span>') +
+            '<span class="avatar-hover" aria-hidden="true">' + icon('camera', 'sm') + '</span>' +
+          '</button>' +
+          '<div>' +
+            '<h2 class="profile-name">' + esc(p.firstName) + '<br>' + esc(p.lastName) + '</h2>' +
+            '<p class="profile-career">' + esc(p.career) + '</p>' +
+            '<p class="profile-age">' + esc(p.age) + ' años</p>' +
+          '</div>' +
+        '</div>' +
+        '<button class="pill-green" data-action="edit-profile">Editar</button>' +
+      '</div>' +
+      '<p class="profile-bio">“' + esc(p.bio) + '”</p>' +
+      '<div class="stats">' +
+        '<button data-action="go" data-tab="cursada"><b>' + state.academic.length + '</b><span>Materias</span></button>' +
+        '<button data-action="go" data-tab="cursada"><b>' + p.huecosLibres + '</b><span>Huecos Libres</span></button>' +
+        '<button data-action="go" data-tab="deportes"><b>' + state.enrolled.length + '</b><span>Entrenamientos</span></button>' +
+      '</div>' +
+    '</section>' +
+
+    '<button class="map-banner" data-action="open-map">' +
+      '<span class="map-banner-body">' +
+        '<span class="map-banner-icon">' + icon('pin') + '</span>' +
+        '<span>' +
+          '<span class="map-badge">Mapa Interactivo Ciudad Universitaria</span>' +
+          '<span class="map-banner-title">“Rutas verdes y circuitos Costanera — Tocá para ver el mapa en vivo”</span>' +
+          '<span class="map-banner-sub">3 circuitos activos · Running, Bici y Pausa Activa frente al río</span>' +
+        '</span>' +
+      '</span>' +
+      icon('chevron-right') +
+    '</button>' +
+
+    '<section>' +
+      '<div class="section-head">' +
+        '<div class="section-title">' + icon('bell', 'sm') + '<h3>Alertas y Cruce de Cursada</h3></div>' +
+        '<span class="count-pill">' + state.alerts.length + ' activas</span>' +
+      '</div>' +
+      '<div class="stack">' +
+        (state.alerts.length ? state.alerts.map(alertCard).join('') : '<p class="empty">No tenés alertas pendientes.</p>') +
+      '</div>' +
+    '</section>';
+  }
+
+  function alertCard(alert) {
+    return '<article class="alert-card">' +
+      '<div class="alert-top">' +
+        '<span class="badge ' + esc(alert.accent || 'blue') + '">' + esc(alert.category) + '</span>' +
+        '<div class="alert-meta">' +
+          '<span class="alert-time">' + esc(alert.time) + '</span>' +
+          '<button class="alert-dismiss" data-action="alert-dismiss" data-id="' + esc(alert.id) + '" aria-label="Descartar alerta">' + icon('x', 'xs') + '</button>' +
+        '</div>' +
+      '</div>' +
+      '<h4>' + esc(alert.title) + '</h4>' +
+      '<p>' + esc(alert.message) + '</p>' +
+      '<div class="alert-actions">' +
+        '<button class="btn-dark" data-action="alert-action" data-target="' + esc(alert.target) + '">' +
+          '<span>' + esc(alert.actionLabel) + '</span>' + icon('chevron-right', 'xs') +
+        '</button>' +
+      '</div>' +
+    '</article>';
+  }
+
+  /* =======================================================================
+     VISTA: DEPORTES
+     ======================================================================= */
+  function filteredSports() {
+    const q = state.sports.search.trim().toLowerCase();
+    return SPORTS.filter((sp) => {
+      const okCat = state.sports.cat === 'Todos' || sp.category === state.sports.cat;
+      const okShift = state.sports.shift === 'Todos' || sp.shift === state.sports.shift;
+      const okSearch = !q || sp.name.toLowerCase().indexOf(q) !== -1;
+      return okCat && okShift && okSearch;
+    });
+  }
+
+  function deportesView() {
+    return '' +
+    '<div class="stack">' +
+      '<div class="search-wrap">' + icon('search', 'sm') +
+        '<input id="sport-search" type="search" placeholder="Buscar entre las 13 disciplinas de FADU..." value="' + esc(state.sports.search) + '" aria-label="Buscar disciplinas">' +
+      '</div>' +
+      '<div class="chips-row" role="group" aria-label="Filtrar por categoría">' +
+        CATEGORIES.map((cat) =>
+          '<button class="chip ' + (state.sports.cat === cat ? 'active' : '') + '" data-action="sport-cat" data-cat="' + cat + '">' + cat + '</button>'
+        ).join('') +
+      '</div>' +
+      '<div class="shift-bar">' +
+        '<span>Hueco libre:</span>' +
+        '<div>' +
+          SHIFTS.map((shift) =>
+            '<button class="shift ' + (state.sports.shift === shift ? 'active' : '') + '" data-action="sport-shift" data-shift="' + shift + '">' + shift + '</button>'
+          ).join('') +
+        '</div>' +
+      '</div>' +
+      '<div id="sports-list" class="stack">' + sportsCards() + '</div>' +
+    '</div>';
+  }
+
+  function sportsCards() {
+    const list = filteredSports();
+    if (!list.length) return '<p class="empty">No encontramos disciplinas con esos filtros.</p>';
+    return list.map(sportCard).join('');
+  }
+
+  function sportCard(sport) {
+    const branch = sport.hasBranches ? state.sports.branch[sport.id] : null;
+    const info = sport.hasBranches ? sport.branches[branch] : sport.schedule;
+    const sourceKey = branch ? sport.id + '-' + branch : sport.id;
+    const enrolled = hasSource(sourceKey);
+
+    const selector = sport.hasBranches
+      ? '<div class="branch-toggle" role="group" aria-label="Rama">' +
+          ['Masculino', 'Femenino'].map((br) =>
+            '<button class="' + (branch === br ? 'active' : '') + '" data-action="sport-branch" data-id="' + sport.id + '" data-branch="' + br + '">' +
+              (br === 'Masculino' ? 'Masc' : 'Fem') + '</button>'
+          ).join('') +
+        '</div>'
+      : '<span class="sport-tag">' + esc(sport.tag) + '</span>';
+
+    return '<article class="sport-card">' +
+      '<div class="sport-top">' +
+        '<div>' +
+          '<span class="sport-cat">' + esc(sport.category) + ' · Turno ' + esc(sport.shift) + '</span>' +
+          '<h3 class="sport-name">' + esc(sport.name) + '</h3>' +
+        '</div>' +
+        selector +
+      '</div>' +
+      '<div class="sport-details">' +
+        '<div>' + icon('clock', 'xs') + '<span>' + esc(info.day) + ' · ' + esc(info.time) + '</span></div>' +
+        '<div>' + icon('pin', 'xs') + '<span>' + esc(info.location) + '</span></div>' +
+      '</div>' +
+      '<div class="sport-foot">' +
+        '<span class="sport-coach">' + esc(info.coach) + ' · <strong>' + info.spots + ' cupos</strong></span>' +
+        '<button class="btn-enroll ' + (enrolled ? 'on' : '') + '" data-action="sport-enroll" data-id="' + sport.id + '">' +
+          (enrolled ? icon('check', 'xs') + '<span>Inscripto</span>' : icon('plus', 'xs') + '<span>Sumarme</span>') +
+        '</button>' +
+      '</div>' +
+    '</article>';
+  }
+
+  /* =======================================================================
+     VISTA: MENTE
+     ======================================================================= */
+  function menteView() {
+    const psych = state.psych;
+    const modalityOptions = ['Presencial (Pab. III)', 'Virtual (Videollamada)'];
+    const timeOptions = ['12:30 hs (Entre clases)', '14:00 hs (Hueco post-taller)', '17:00 hs (Tarde)'];
+    const reasonOptions = [
+      'Ansiedad con las entregas / Organización',
+      'Estrés en época de Jury o Finales',
+      'Orientación vocacional / Cambio de cátedra',
+      'Acompañamiento emocional personal'
+    ];
+
+    return '' +
+    '<div class="stack-lg">' +
+      '<section class="card card-dark mente-hero">' +
+        '<span class="badge-conf">' + icon('heart', 'xs') + 'Espacio Confidencial UBA</span>' +
+        '<h3>¿Semana de entrega o jury? No tenés que pasarla solo/a.</h3>' +
+        '<p>El equipo de Consultoría Psicológica de FADU brinda entrevistas de orientación sin cargo y talleres para acompañar tu cursada.</p>' +
+      '</section>' +
+
+      '<form id="psych-form" class="card form-card" novalidate>' +
+        '<div class="form-card-head">' +
+          '<h4>Solicitar Entrevista de Orientación</h4>' +
+          '<span class="mini-pill">Sincroniza con tu cursada</span>' +
+        '</div>' +
+        '<div>' +
+          '<span class="label-sm">Modalidad preferida</span>' +
+          '<div class="seg">' +
+            modalityOptions.map((mod) =>
+              '<button type="button" class="' + (psych.modality === mod ? 'active' : '') + '" data-action="psych-modality" data-mod="' + esc(mod) + '">' + esc(mod) + '</button>'
+            ).join('') +
+          '</div>' +
+        '</div>' +
+        '<div class="grid-2">' +
+          '<div>' +
+            '<label class="label-sm" for="psych-day">Día disponible</label>' +
+            '<select id="psych-day">' +
+              DAYS.map((d) => '<option value="' + d + '"' + (psych.day === d ? ' selected' : '') + '>' + d + '</option>').join('') +
+            '</select>' +
+          '</div>' +
+          '<div>' +
+            '<label class="label-sm" for="psych-time">Bache libre detectado</label>' +
+            '<select id="psych-time">' +
+              timeOptions.map((t) => '<option value="' + esc(t) + '"' + (psych.time === t ? ' selected' : '') + '>' + esc(t) + '</option>').join('') +
+            '</select>' +
+          '</div>' +
+        '</div>' +
+        '<div>' +
+          '<label class="label-sm" for="psych-reason">Motivo principal de consulta</label>' +
+          '<select id="psych-reason">' +
+            reasonOptions.map((r) => '<option value="' + esc(r) + '"' + (psych.reason === r ? ' selected' : '') + '>' + esc(r) + '</option>').join('') +
+          '</select>' +
+        '</div>' +
+        '<button type="submit" class="btn-green">Confirmar Turno Confidencial y Agendar</button>' +
+      '</form>' +
+
+      '<section class="card stack">' +
+        '<h4 style="font-size:14px;font-weight:800">Talleres Grupos de Apoyo FADU</h4>' +
+        WORKSHOPS.map((wk) => {
+          const joined = state.workshops.indexOf(wk.id) !== -1;
+          return '<div class="workshop">' +
+            '<div><p>' + esc(wk.title) + '</p><small>' + esc(wk.schedule) + ' · <b>' + esc(wk.spots) + '</b></small></div>' +
+            '<button class="btn-mini ' + (joined ? 'on' : '') + '" data-action="workshop" data-id="' + wk.id + '">' +
+              (joined ? 'Anotado' : 'Anotarme') +
+            '</button>' +
+          '</div>';
+        }).join('') +
+      '</section>' +
+
+      '<div class="bridge">' +
+        '<div>' +
+          '<span class="eyebrow">Puente Físico + Mental</span>' +
+          '<h5>Yoga, Pilates Mat y Stretching en FADU</h5>' +
+          '<p>Bajá un cambio después de colgar láminas.</p>' +
+        '</div>' +
+        '<button class="btn-calm" data-action="calm">Ver clases</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  /* =======================================================================
+     VISTA: GRUPOS
+     ======================================================================= */
+  function gruposView() {
+    return '' +
+    '<div class="stack-lg">' +
+      '<section class="card card-dark group-head">' +
+        '<div>' +
+          '<h3>Comunidad &amp; Salidas en Grupo</h3>' +
+          '<p>Sumate a partidos armados por alumnos o salí a correr por Costanera en tus huecos libres.</p>' +
+        '</div>' +
+        '<button class="btn-create" data-action="open-group">' + icon('plus', 'sm') + '<span>Crear</span></button>' +
+      '</section>' +
+
+      '<button class="map-link" data-action="open-map">' +
+        '<span class="map-link-body">' + icon('navigation') +
+          '<span>' +
+            '<p>Ver Mapa de Circuitos Costanera y Reserva</p>' +
+            '<p>Tocá para ver puntos de hidratación, bicicleteros y salidas</p>' +
+          '</span>' +
+        '</span>' +
+        icon('chevron-right', 'sm') +
+      '</button>' +
+
+      '<div class="stack">' + state.groups.map(groupCard).join('') + '</div>' +
+    '</div>';
+  }
+
+  function groupCard(grp) {
+    return '<article class="card group-card">' +
+      '<div class="group-card-head">' +
+        '<div>' +
+          '<span class="sport-chip">' + esc(grp.sport) + '</span>' +
+          '<h4>' + esc(grp.title) + '</h4>' +
+          '<p class="creator">Organiza: ' + esc(grp.creator) + '</p>' +
+        '</div>' +
+        '<span class="members-pill">' + grp.members + '/' + grp.maxMembers + '</span>' +
+      '</div>' +
+      '<div class="group-foot">' +
+        '<div>' +
+          '<p class="group-when">' + esc(grp.day) + ' · ' + esc(grp.time) + '</p>' +
+          '<p class="group-where">📍 ' + esc(grp.meetingPoint) + '</p>' +
+        '</div>' +
+        '<button class="btn-join ' + (grp.joined ? 'on' : '') + '" data-action="group-join" data-id="' + esc(grp.id) + '">' +
+          (grp.joined ? 'Unido ✓' : 'Unirme al grupo') +
+        '</button>' +
+      '</div>' +
+    '</article>';
+  }
+
+  /* =======================================================================
+     VISTA: MI CURSADA
+     ======================================================================= */
+  function cursadaView() {
+    const mats = state.academic.filter((m) => m.day === state.day);
+    const acts = state.enrolled.filter((a) => a.day === state.day);
+
+    return '' +
+    '<div class="stack-lg">' +
+      '<section class="card card-dark agenda-summary">' +
+        '<div>' +
+          '<span class="eyebrow green">Agenda Unificada FADU</span>' +
+          '<h3>' + state.academic.length + ' Materias · ' + state.enrolled.length + ' Actividades de Bienestar</h3>' +
+          '<p>Todo deporte, salida del mapa o turno en Mente se agenda solo acá.</p>' +
+        '</div>' +
+        '<button class="btn-white-sm" data-action="open-subject">+ Materia</button>' +
+      '</section>' +
+
+      '<div class="day-tabs" role="tablist" aria-label="Día de la semana">' +
+        DAYS.map((day) =>
+          '<button role="tab" aria-selected="' + (state.day === day) + '" class="' + (state.day === day ? 'active' : '') + '" data-action="day" data-day="' + day + '">' + day.slice(0, 3) + '</button>'
+        ).join('') +
+      '</div>' +
+
+      '<div class="stack">' +
+        '<h4 class="timeline-title">Cronograma del ' + state.day + '</h4>' +
+        mats.map(classCard).join('') +
+
+        '<div class="gap-card">' +
+          '<div>' +
+            '<span class="eyebrow">⚡ Hueco Libre Detectado (12:30 - 14:00 hs)</span>' +
+            '<p>Ideal para Pausa Activa por Costanera o Ajedrez en el Patio</p>' +
+          '</div>' +
+          '<button data-action="open-map">Ver Mapa</button>' +
+        '</div>' +
+
+        acts.map(activityCard).join('') +
+        (!mats.length && !acts.length ? '<p class="empty">Sin bloques para este día.</p>' : '') +
+      '</div>' +
+    '</div>';
+  }
+
+  function classCard(mat) {
+    return '<article class="class-card">' +
+      '<div class="class-top">' +
+        '<span>Cursada FADU · Taller / Teórica</span>' +
+        '<span>' + esc(mat.time) + '</span>' +
+      '</div>' +
+      '<h5>' + esc(mat.title) + '</h5>' +
+      '<p>📍 ' + esc(mat.location) + '</p>' +
+    '</article>';
+  }
+
+  function activityCard(act) {
+    const label = act.type === 'mente'
+      ? '🧠 Consultoría Psicológica'
+      : act.type === 'taller'
+        ? '💜 Taller de Bienestar'
+        : act.type === 'ruta'
+          ? '🗺️ Circuito Costanera'
+          : '🏋️‍♂️ Deporte FADU Sincronizado';
+
+    return '<article class="act-card">' +
+      '<div>' +
+        '<span class="eyebrow">' + label + '</span>' +
+        '<h5>' + esc(act.title) + '</h5>' +
+        '<p>🕒 ' + esc(act.time) + ' · 📍 ' + esc(act.location) + '</p>' +
+      '</div>' +
+      '<button class="act-delete" data-action="activity-delete" data-id="' + esc(act.id) + '" title="Cancelar inscripción" aria-label="Quitar ' + esc(act.title) + '">' +
+        icon('x', 'sm') +
+      '</button>' +
+    '</article>';
+  }
+
+  /* =======================================================================
+     MODAL: MAPA INTERACTIVO
+     ======================================================================= */
+  const POI_ICONS = { water: 'droplets', tree: 'trees', bike: 'bike', bench: 'footprints' };
+  const ROUTE_FILTERS = [
+    { id: 'Todos', label: 'Todos los circuitos' },
+    { id: 'Running', label: '🏃‍♂️ Running' },
+    { id: 'Bicicleta', label: '🚴‍♂️ Bicicleta' },
+    { id: 'Caminata', label: '🚶‍♂️ Caminata / Pausa' }
+  ];
+
+  function selectedRoute() {
+    return ROUTES.find((r) => r.id === state.routes.selectedId) || ROUTES[0];
+  }
+
+  function visibleRoutes() {
+    return state.routes.type === 'Todos' ? ROUTES : ROUTES.filter((r) => r.type === state.routes.type);
+  }
+
+  function mapView() {
+    const route = selectedRoute();
+    const routes = visibleRoutes();
+    const joined = state.routes.joined.indexOf(route.id) !== -1;
+    const runners = route.groupRunners + (joined ? 1 : 0);
+
+    return '' +
+    '<div class="map-screen">' +
+      '<div class="map-head">' +
+        '<div class="map-head-top">' +
+          '<div>' +
+            '<span class="eyebrow">Ciudad Universitaria · Costanera Norte</span>' +
+            '<h2>Rutas Verdes y Circuitos en Vivo</h2>' +
+          '</div>' +
+          '<button class="icon-btn ghost" data-action="close-modal" aria-label="Cerrar mapa">' + icon('x', 'sm') + '</button>' +
+        '</div>' +
+        '<div class="chips-row" role="group" aria-label="Filtrar circuitos">' +
+          ROUTE_FILTERS.map((f) =>
+            '<button class="chip ' + (state.routes.type === f.id ? 'active' : '') + '" data-action="route-type" data-type="' + f.id + '">' + f.label + '</button>'
+          ).join('') +
+        '</div>' +
+      '</div>' +
+
+      '<div class="map-canvas">' +
+        '<svg viewBox="0 0 380 280" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Mapa de circuitos en Ciudad Universitaria">' +
+          '<path d="M 190 0 L 380 0 L 380 280 L 295 280 Q 250 180 220 110 Z" fill="#0F2942"></path>' +
+          '<text x="292" y="42" fill="#38BDF8" font-size="10" font-weight="bold" opacity="0.6">RÍO DE LA PLATA</text>' +
+          '<path d="M 120 190 Q 200 250 285 240 L 265 130 Q 190 120 120 190 Z" fill="#1B3B2B"></path>' +
+          '<text x="168" y="245" fill="#34D399" font-size="8.5" font-weight="bold" opacity="0.7">RESERVA ECOLÓGICA</text>' +
+          '<path d="M 20 260 L 90 190 L 160 65 L 260 185" stroke="#2D3D35" stroke-width="6" fill="none" stroke-linecap="round"></path>' +
+          routes.map((rt) => {
+            const on = rt.id === route.id;
+            return '<path class="route-pin" data-action="route-select" data-id="' + rt.id + '" d="' + rt.path + '" fill="none" stroke="' + rt.color + '" stroke-width="' + (on ? 6 : 3) + '" stroke-dasharray="' + (on ? 'none' : '5,5') + '" opacity="' + (on ? 1 : .45) + '"></path>';
+          }).join('') +
+          '<g transform="translate(65,175)"><rect width="48" height="28" rx="6" fill="#232323" stroke="#FFFFFF" stroke-width="2"></rect>' +
+            '<text x="24" y="17" text-anchor="middle" fill="#FFFFFF" font-size="8.5" font-weight="bold">PAB. III FADU</text></g>' +
+          '<g transform="translate(135,50)"><rect width="45" height="24" rx="5" fill="#232323" stroke="#9CA3AF" stroke-width="1.5"></rect>' +
+            '<text x="22" y="15" text-anchor="middle" fill="#D1D5DB" font-size="7.5" font-weight="bold">PAB. II</text></g>' +
+          '<g transform="translate(215,165)"><rect width="58" height="25" rx="5" fill="#1E3A2F" stroke="#15B86C" stroke-width="1.5"></rect>' +
+            '<text x="29" y="15" text-anchor="middle" fill="#A7F3D0" font-size="7.5" font-weight="bold">CAMPO UBA</text></g>' +
+          route.pois.map((poi) =>
+            '<g transform="translate(' + poi.x + ',' + poi.y + ')" aria-hidden="true">' +
+              '<circle r="9" fill="' + route.color + '" stroke="#FFFFFF" stroke-width="2"></circle>' +
+              '<circle r="3.5" fill="#FFFFFF"></circle>' +
+            '</g>'
+          ).join('') +
+        '</svg>' +
+        '<div class="map-route-chips">' +
+          routes.map((rt) =>
+            '<button class="' + (rt.id === route.id ? 'active' : '') + '" data-action="route-select" data-id="' + rt.id + '">' + esc(rt.title) + '</button>'
+          ).join('') +
+        '</div>' +
+      '</div>' +
+
+      '<div class="map-info">' +
+        '<div class="map-info-top">' +
+          '<div>' +
+            '<span class="map-type" style="background:' + route.color + '30;color:#6EE7B7">' + esc(route.type) + ' · ' + esc(route.difficulty) + '</span>' +
+            '<h4>' + esc(route.title) + '</h4>' +
+          '</div>' +
+          '<div class="map-distance"><b>' + esc(route.distance) + '</b><span>~' + esc(route.duration) + '</span></div>' +
+        '</div>' +
+        '<p class="map-desc">' + esc(route.description) + '</p>' +
+        '<div class="poi-row">' +
+          route.pois.map((poi) =>
+            '<span class="poi ' + poi.icon + '">' + icon(POI_ICONS[poi.icon] || 'pin', 'xs') + '<span>' + esc(poi.name) + '</span></span>'
+          ).join('') +
+        '</div>' +
+        '<div class="map-join">' +
+          '<div class="map-join-info">' +
+            '<strong>Próxima salida grupal:</strong> ' + esc(route.day) + ' ' + esc(route.time) +
+            '<div class="count">' + runners + ' estudiantes anotados</div>' +
+          '</div>' +
+          '<button class="btn-route-join ' + (joined ? 'on' : '') + '" data-action="route-join">' +
+            (joined ? 'En el grupo ✓' : 'Salir en grupo') +
+          '</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  /* =======================================================================
+     MODALES: RECUPERAR CLAVE, PERFIL, GRUPO, MATERIA
+     ======================================================================= */
+  function forgotModal() {
+    return '' +
+    '<div class="overlay">' +
+      '<div class="modal" role="dialog" aria-modal="true" aria-labelledby="forgot-title">' +
+        '<div class="modal-head"><h3 id="forgot-title">Recuperar clave SIU</h3>' +
+          '<button class="icon-btn ghost" data-action="close-modal" aria-label="Cerrar">' + icon('x', 'sm') + '</button>' +
+        '</div>' +
+        '<p class="hint">Tu acceso a FADU Bienestar está vinculado con tu cuenta única de SIU Guaraní UBA. Te enviaremos un enlace de restablecimiento a tu correo institucional <span style="color:#60A5FA;font-weight:600">@fadu.uba.ar</span>.</p>' +
+        '<button class="btn-green" data-action="forgot-send">Enviar correo de recuperación</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function profileModal() {
+    const p = state.profile;
+    return '' +
+    '<div class="overlay">' +
+      '<form id="profile-form" class="modal" novalidate>' +
+        '<div class="modal-head"><h3>Editar Perfil FADU</h3>' +
+          '<button type="button" class="icon-btn ghost" data-action="close-modal" aria-label="Cerrar">' + icon('x', 'sm') + '</button>' +
+        '</div>' +
+        '<label class="switch-row">' +
+          '<span>Mostrar Avatar con Iniciales en vez de "FOTO"</span>' +
+          '<input type="checkbox" class="switch-input" id="avatar-toggle"' + (p.showPhotoAvatar ? ' checked' : '') + '>' +
+          '<span class="switch" aria-hidden="true"></span>' +
+        '</label>' +
+        '<div class="grid-2">' +
+          '<div class="field-dark"><label for="pf-first">Nombre</label>' +
+            '<input id="pf-first" type="text" value="' + esc(p.firstName) + '" required></div>' +
+          '<div class="field-dark"><label for="pf-last">Apellido</label>' +
+            '<input id="pf-last" type="text" value="' + esc(p.lastName) + '" required></div>' +
+        '</div>' +
+        '<div class="grid-3">' +
+          '<div class="field-dark"><label for="pf-career">Carrera / Nivel</label>' +
+            '<input id="pf-career" type="text" value="' + esc(p.career) + '"></div>' +
+          '<div class="field-dark"><label for="pf-age">Edad</label>' +
+            '<input id="pf-age" type="number" min="16" max="99" value="' + esc(p.age) + '"></div>' +
+        '</div>' +
+        '<div class="field-dark"><label for="pf-bio">Bio / Estado de Cursada</label>' +
+          '<textarea id="pf-bio" rows="3">' + esc(p.bio) + '</textarea></div>' +
+        '<div class="modal-actions">' +
+          '<button type="button" class="btn btn-outline" data-action="close-modal">Cancelar</button>' +
+          '<button type="submit" class="btn btn-green">Guardar Cambios</button>' +
+        '</div>' +
+      '</form>' +
+    '</div>';
+  }
+
+  function groupModal() {
+    return '' +
+    '<div class="overlay">' +
+      '<form id="group-form" class="modal" novalidate>' +
+        '<div class="modal-head"><h3>Armar Salida o Grupo FADU</h3>' +
+          '<button type="button" class="icon-btn ghost" data-action="close-modal" aria-label="Cerrar">' + icon('x', 'sm') + '</button>' +
+        '</div>' +
+        '<div class="field-dark"><label for="nf-title">Título de la convocatoria</label>' +
+          '<input id="nf-title" type="text" required placeholder="Ej: Caminata por Costanera post-entrega"></div>' +
+        '<div class="grid-2">' +
+          '<div class="field-dark"><label for="nf-sport">Disciplina / Actividad</label>' +
+            '<select id="nf-sport">' + ['Running Costanera', 'Fútbol 5 mixto', 'Básquet', 'Ajedrez', 'Tenis de mesa', 'Bicicleta']
+              .map((s) => '<option>' + s + '</option>').join('') + '</select></div>' +
+          '<div class="field-dark"><label for="nf-day">Día</label>' +
+            '<select id="nf-day">' + DAYS.map((d) => '<option' + (d === 'Jueves' ? ' selected' : '') + '>' + d + '</option>').join('') + '</select></div>' +
+        '</div>' +
+        '<div class="field-dark"><label for="nf-time">Hora</label>' +
+          '<input id="nf-time" type="text" value="13:00 hs"></div>' +
+        '<div class="field-dark"><label for="nf-meeting">Punto de encuentro</label>' +
+          '<input id="nf-meeting" type="text" value="Pabellón III · Patio Central"></div>' +
+        '<button type="submit" class="btn-green">Publicar Grupo y Agendar</button>' +
+      '</form>' +
+    '</div>';
+  }
+
+  function subjectModal() {
+    return '' +
+    '<div class="overlay">' +
+      '<form id="subject-form" class="modal" novalidate>' +
+        '<div class="modal-head"><h3>Sumar Materia de FADU</h3>' +
+          '<button type="button" class="icon-btn ghost" data-action="close-modal" aria-label="Cerrar">' + icon('x', 'sm') + '</button>' +
+        '</div>' +
+        '<div class="field-dark"><label for="nm-title">Nombre de la Materia / Cátedra</label>' +
+          '<input id="nm-title" type="text" required placeholder="Ej: Morfología I - Cátedra..."></div>' +
+        '<div class="grid-2">' +
+          '<div class="field-dark"><label for="nm-day">Día de cursada</label>' +
+            '<select id="nm-day">' + DAYS.map((d) => '<option>' + d + '</option>').join('') + '</select></div>' +
+          '<div class="field-dark"><label for="nm-time">Franja horaria</label>' +
+            '<input id="nm-time" type="text" value="14:00 - 18:00 hs"></div>' +
+        '</div>' +
+        '<div class="field-dark"><label for="nm-location">Taller / Aula en Pabellón III</label>' +
+          '<input id="nm-location" type="text" value="Pabellón III"></div>' +
+        '<button type="submit" class="btn-green">Agregar a Mi Cursada</button>' +
+      '</form>' +
+    '</div>';
+  }
+
+  /* =======================================================================
+     ACCIONES
+     ======================================================================= */
+  function closeModal() {
+    state.modal = null;
+    render();
+  }
+
+  function toggleSportEnrollment(id) {
+    const sport = SPORTS.find((s) => s.id === id);
+    if (!sport) return;
+    const branch = sport.hasBranches ? state.sports.branch[id] : null;
+    const info = sport.hasBranches ? sport.branches[branch] : sport.schedule;
+    const sourceKey = branch ? sport.id + '-' + branch : sport.id;
+
+    if (hasSource(sourceKey)) {
+      removeSource(sourceKey);
+      showToast('Cancelaste tu inscripción a ' + sport.name + (branch ? ' (' + branch + ')' : '') + '.');
+    } else {
+      addActivity({
+        title: sport.name + (branch ? ' (' + branch + ')' : ''),
+        day: info.day,
+        time: info.time,
+        location: info.location,
+        type: 'deporte',
+        sourceId: sourceKey
+      });
+      showToast('¡Inscripción confirmada en ' + sport.name + (branch ? ' (' + branch + ')' : '') + '! Ya está en Mi Cursada.');
+    }
+    render();
+  }
+
+  function toggleWorkshop(id) {
+    const wk = WORKSHOPS.find((w) => w.id === id);
+    if (!wk) return;
+    const index = state.workshops.indexOf(id);
+    if (index !== -1) {
+      state.workshops.splice(index, 1);
+      removeSource('wk-' + id);
+      showToast('Te desanotaste del taller "' + wk.title + '".');
+    } else {
+      state.workshops.push(id);
+      addActivity({
+        title: wk.title,
+        day: wk.day,
+        time: wk.time,
+        location: wk.location,
+        type: 'taller',
+        sourceId: 'wk-' + id
+      });
+      showToast('¡Lugar reservado en el taller "' + wk.title + '"!');
+    }
+    render();
+  }
+
+  function toggleGroup(id) {
+    const grp = state.groups.find((g) => g.id === id);
+    if (!grp) return;
+    if (grp.joined) {
+      grp.joined = false;
+      grp.members = Math.max(0, grp.members - 1);
+      removeSource('gr-' + id);
+      showToast('Saliste del grupo "' + grp.title + '".');
+    } else {
+      if (grp.members >= grp.maxMembers) {
+        showToast('El grupo "' + grp.title + '" está completo.');
+        return;
+      }
+      grp.joined = true;
+      grp.members += 1;
+      addActivity({
+        title: grp.title,
+        day: grp.day.split(' y ')[0],
+        time: grp.time,
+        location: grp.meetingPoint,
+        type: grp.sport.indexOf('Running') !== -1 ? 'ruta' : 'deporte',
+        sourceId: 'gr-' + id
+      });
+      showToast('¡Te uniste a "' + grp.title + '". Ya está agendado.');
+    }
+    render();
+  }
+
+  function toggleRoute() {
+    const route = selectedRoute();
+    const index = state.routes.joined.indexOf(route.id);
+    if (index !== -1) {
+      state.routes.joined.splice(index, 1);
+      removeSource(route.id);
+      showToast('Saliste de la salida grupal "' + route.title + '".');
+    } else {
+      state.routes.joined.push(route.id);
+      addActivity({
+        title: 'Salida: ' + route.title,
+        day: route.day,
+        time: route.time,
+        location: 'Puerta principal Pabellón III',
+        type: 'ruta',
+        sourceId: route.id
+      });
+      showToast('¡Anotado en "' + route.title + '". Te esperamos en la puerta del Pab. III.');
+    }
+    render();
+  }
+
+  function goTab(tab) {
+    state.tab = tab;
+    state.modal = null;
+    render(true);
+  }
+
+  /* =======================================================================
+     EVENTOS
+     ======================================================================= */
+  document.addEventListener('click', function (event) {
+    const overlay = event.target.closest('.overlay');
+    if (overlay && event.target === overlay) {
+      closeModal();
+      return;
+    }
+
+    const trigger = event.target.closest('[data-action]');
+    if (!trigger) return;
+    const action = trigger.getAttribute('data-action');
+
+    switch (action) {
+      case 'forgot':
+        state.modal = 'forgot';
+        render();
+        break;
+
+      case 'forgot-send':
+        state.modal = null;
+        render();
+        showToast('Te enviamos un enlace de recuperación a tu correo @fadu.uba.ar.');
+        break;
+
+      case 'close-modal':
+        closeModal();
+        break;
+
+      case 'demo':
+        state.loginError = '';
+        state.loggedIn = true;
+        state.tab = 'inicio';
+        render(true);
+        showToast('Bienvenido Pedro. Sesión demo iniciada.');
+        break;
+
+      case 'logout':
+        state.loggedIn = false;
+        state.modal = null;
+        state.loginError = '';
+        render(true);
+        showToast('Cerraste sesión en FADU Bienestar.');
+        break;
+
+      case 'go':
+        goTab(trigger.getAttribute('data-tab'));
+        break;
+
+      case 'open-map':
+        state.modal = 'map';
+        render();
+        break;
+
+      case 'alert-dismiss':
+        state.alerts = state.alerts.filter((a) => a.id !== trigger.getAttribute('data-id'));
+        render();
+        break;
+
+      case 'alert-action': {
+        const target = trigger.getAttribute('data-target');
+        if (target === 'map') {
+          state.modal = 'map';
+          render();
+        } else {
+          goTab(target);
+        }
+        break;
+      }
+
+      case 'sport-cat':
+        state.sports.cat = trigger.getAttribute('data-cat');
+        render();
+        break;
+
+      case 'sport-shift':
+        state.sports.shift = trigger.getAttribute('data-shift');
+        render();
+        break;
+
+      case 'sport-branch':
+        state.sports.branch[trigger.getAttribute('data-id')] = trigger.getAttribute('data-branch');
+        render();
+        break;
+
+      case 'sport-enroll':
+        toggleSportEnrollment(trigger.getAttribute('data-id'));
+        break;
+
+      case 'psych-modality':
+        state.psych.modality = trigger.getAttribute('data-mod');
+        render();
+        break;
+
+      case 'workshop':
+        toggleWorkshop(trigger.getAttribute('data-id'));
+        break;
+
+      case 'calm':
+        state.tab = 'deportes';
+        state.sports.cat = 'Cuerpo y Calma';
+        state.sports.shift = 'Todos';
+        state.sports.search = '';
+        render(true);
+        break;
+
+      case 'group-join':
+        toggleGroup(trigger.getAttribute('data-id'));
+        break;
+
+      case 'open-group':
+        state.modal = 'group';
+        render();
+        break;
+
+      case 'open-subject':
+        state.modal = 'subject';
+        render();
+        break;
+
+      case 'day':
+        state.day = trigger.getAttribute('data-day');
+        render();
+        break;
+
+      case 'activity-delete': {
+        const id = trigger.getAttribute('data-id');
+        const activity = state.enrolled.find((a) => a.id === id);
+        if (!activity) break;
+        state.enrolled = state.enrolled.filter((a) => a.id !== id);
+        if (activity.sourceId) {
+          state.groups.forEach((g) => {
+            if ('gr-' + g.id === activity.sourceId) {
+              g.joined = false;
+              g.members = Math.max(0, g.members - 1);
+            }
+          });
+          const rIndex = state.routes.joined.indexOf(activity.sourceId);
+          if (rIndex !== -1) state.routes.joined.splice(rIndex, 1);
+        }
+        render();
+        showToast('Quitaste "' + activity.title + '" de tu agenda.');
+        break;
+      }
+
+      case 'route-type':
+        state.routes.type = trigger.getAttribute('data-type');
+        if (state.routes.type !== 'Todos' && !visibleRoutes().some((r) => r.id === state.routes.selectedId)) {
+          state.routes.selectedId = visibleRoutes()[0].id;
+        }
+        render();
+        break;
+
+      case 'route-select':
+        state.routes.selectedId = trigger.getAttribute('data-id');
+        render();
+        break;
+
+      case 'route-join':
+        toggleRoute();
+        break;
+
+      case 'edit-profile':
+        state.modal = 'profile';
+        render();
+        break;
+
+      default:
+        break;
+    }
+  });
+
+  document.addEventListener('input', function (event) {
+    if (event.target.id === 'sport-search') {
+      state.sports.search = event.target.value;
+      const list = document.getElementById('sports-list');
+      if (list) list.innerHTML = sportsCards();
+    }
+  });
+
+  document.addEventListener('change', function (event) {
+    const el = event.target;
+    if (el.id === 'keep-logged') state.keepLogged = el.checked;
+    if (el.id === 'psych-day') state.psych.day = el.value;
+    if (el.id === 'psych-time') state.psych.time = el.value;
+    if (el.id === 'psych-reason') state.psych.reason = el.value;
+  });
+
+  document.addEventListener('submit', function (event) {
+    const form = event.target;
+    const id = form.id;
+    if (!id) return;
+    event.preventDefault();
+
+    if (id === 'login-form') {
+      const cuil = (document.getElementById('cuil') || {}).value || '';
+      const password = (document.getElementById('password') || {}).value || '';
+      state.cuil = cuil;
+      state.password = password;
+      if (!cuil.trim() || !password.trim()) {
+        state.loginError = 'Ingresá tu CUIL y contraseña para continuar.';
+        render();
+        return;
+      }
+      state.loginError = '';
+      state.loggedIn = true;
+      state.tab = 'inicio';
+      render(true);
+      showToast('Sesión iniciada. ¡Bienvenido/a a FADU Bienestar!');
+      return;
+    }
+
+    if (id === 'profile-form') {
+      const p = state.profile;
+      p.firstName = (document.getElementById('pf-first') || {}).value || p.firstName;
+      p.lastName = (document.getElementById('pf-last') || {}).value || p.lastName;
+      p.career = (document.getElementById('pf-career') || {}).value || p.career;
+      const ageEl = document.getElementById('pf-age');
+      const age = parseInt(ageEl ? ageEl.value : '', 10);
+      p.age = isNaN(age) ? p.age : age;
+      p.bio = (document.getElementById('pf-bio') || {}).value || p.bio;
+      const avatar = document.getElementById('avatar-toggle');
+      p.showPhotoAvatar = !!(avatar && avatar.checked);
+      state.modal = null;
+      render();
+      showToast('Perfil actualizado correctamente.');
+      return;
+    }
+
+    if (id === 'psych-form') {
+      removeSource('ps-1');
+      addActivity({
+        title: 'Entrevista de Orientación Psicológica',
+        day: state.psych.day,
+        time: state.psych.time,
+        location: state.psych.modality === 'Virtual (Videollamada)'
+          ? 'Videollamada · Consultoría FADU'
+          : 'Consultoría Psicológica · Pab. III',
+        type: 'mente',
+        sourceId: 'ps-1'
+      });
+      state.day = state.psych.day;
+      render();
+      showToast('Turno confidencial agendado para el ' + state.psych.day + ' a las ' + state.psych.time + '.');
+      return;
+    }
+
+    if (id === 'group-form') {
+      const title = ((document.getElementById('nf-title') || {}).value || '').trim();
+      if (!title) {
+        showToast('Poné un título para tu convocatoria.');
+        return;
+      }
+      const sport = (document.getElementById('nf-sport') || {}).value || 'Running Costanera';
+      const day = (document.getElementById('nf-day') || {}).value || 'Jueves';
+      const time = ((document.getElementById('nf-time') || {}).value || '').trim() || '13:00 hs';
+      const meeting = ((document.getElementById('nf-meeting') || {}).value || '').trim() || 'Pabellón III';
+      const newGroup = {
+        id: nextId('gr'),
+        title: title,
+        sport: sport,
+        day: day,
+        time: time,
+        meetingPoint: meeting,
+        members: 1,
+        maxMembers: 12,
+        creator: state.profile.firstName + ' ' + state.profile.lastName + ' (Vos)',
+        joined: true
+      };
+      state.groups.unshift(newGroup);
+      addActivity({
+        title: title,
+        day: day,
+        time: time,
+        location: meeting,
+        type: sport.indexOf('Running') !== -1 ? 'ruta' : 'deporte',
+        sourceId: 'gr-' + newGroup.id
+      });
+      state.modal = null;
+      render();
+      showToast('Grupo publicado y agendado en Mi Cursada.');
+      return;
+    }
+
+    if (id === 'subject-form') {
+      const title = ((document.getElementById('nm-title') || {}).value || '').trim();
+      if (!title) {
+        showToast('Escribí el nombre de la materia.');
+        return;
+      }
+      const day = (document.getElementById('nm-day') || {}).value || 'Lunes';
+      const time = ((document.getElementById('nm-time') || {}).value || '').trim() || '14:00 - 18:00 hs';
+      const location = ((document.getElementById('nm-location') || {}).value || '').trim() || 'Pabellón III';
+      state.academic.push({ id: nextId('ac'), title: title, day: day, time: time, location: location });
+      state.day = day;
+      state.modal = null;
+      render(true);
+      showToast('Materia agregada a Mi Cursada.');
+    }
+  });
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && state.modal) closeModal();
+  });
+
+  /* =======================================================================
+     INICIO
+     ======================================================================= */
+  render();
+})();
+</script>
+</body>
+</html>
